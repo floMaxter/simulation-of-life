@@ -17,11 +17,8 @@ public class Simulation {
 
     private WorldMap worldMap;
     private final Integer moveCount;
-
     private final ConsoleManager consoleManager;
-
     private final WorldMapRender worldMapRender;
-
     private List<Action> initActions;
 
     public Simulation() {
@@ -29,7 +26,6 @@ public class Simulation {
         this.consoleManager = new ConsoleManager();
         this.worldMapRender = new WorldMapRender();
         generateInitActions();
-        initWorld();
     }
 
     private void generateInitActions() {
@@ -41,6 +37,18 @@ public class Simulation {
         initActions.add(new HerbivoreSpawnAction());
     }
 
+    public void startGame() {
+        consoleManager.printWelcomeWords();
+        createNewMap();
+    }
+
+    private void createNewMap() {
+        initWorld();
+        worldMapRender.renderMap(worldMap);
+        consoleManager.printGameFeatures();
+        processUserInput();
+    }
+
     private void initWorld() {
         this.worldMap = new WorldMap(GameUtils.WORLD_MAP_HEIGHT, GameUtils.WORLD_MAP_WIDTH);
         for (Action action : initActions) {
@@ -48,16 +56,14 @@ public class Simulation {
         }
     }
 
-    public void startGame() {
-        consoleManager.printWelcomeWords();
-        worldMapRender.renderMap(worldMap);
-        consoleManager.printGameFeatures();
+    private void processUserInput() {
         int userChoice = consoleManager.readUserInput();
         switch (userChoice) {
-            case GameUtils.ONE_MOVE_OF_SIMULATION -> nextTurn();
-            case GameUtils.ENDLESS_SIMULATION -> startSimulation();
-            case GameUtils.CREATE_NEW_MAP -> createNewMap();
-            case GameUtils.EXIT -> endGame();
+            case GameUtils.OPTION_ONE_MOVE -> nextTurn();
+            case GameUtils.OPTION_ENDLESS_CYCLE -> startSimulation();
+            case GameUtils.OPTION_PAUSE_SIMULATION -> pauseSimulation();
+            case GameUtils.OPTION_NEW_MAP -> createNewMap();
+            case GameUtils.OPTION_EXIT -> endGame();
         }
     }
 
@@ -66,10 +72,6 @@ public class Simulation {
     }
 
     private void startSimulation() {
-
-    }
-
-    private void createNewMap() {
 
     }
 

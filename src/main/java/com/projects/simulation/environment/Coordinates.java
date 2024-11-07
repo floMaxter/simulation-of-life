@@ -12,6 +12,14 @@ public class Coordinates {
         this.y = y;
     }
 
+    public Integer getX() {
+        return x;
+    }
+
+    public Integer getY() {
+        return y;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

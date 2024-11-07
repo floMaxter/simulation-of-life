@@ -1,5 +1,6 @@
 package com.projects.simulation.action.init;
 
+import com.projects.simulation.GameUtils;
 import com.projects.simulation.action.Action;
 import com.projects.simulation.entity.Entity;
 import com.projects.simulation.environment.Coordinates;
@@ -29,8 +30,8 @@ public abstract class SpawnAction extends Action {
 
     private Coordinates getRandomCoordinates(WorldMap map) {
         while (true) {
-            int randHeight = getRandomIntInRange(1, map.getHeight());
-            int randWidth = getRandomIntInRange(1, map.getWidth());
+            int randHeight = getRandomIntInRange(GameUtils.MIN_COORDINATE_HEIGHT, GameUtils.MAX_COORDINATE_HEIGHT);
+            int randWidth = getRandomIntInRange(GameUtils.MIN_COORDINATE_HEIGHT, GameUtils.MAX_COORDINATE_HEIGHT);
             Coordinates coordinates = new Coordinates(randHeight, randWidth);
             if (map.isEmptyCoordinates(coordinates)) {
                 return coordinates;
