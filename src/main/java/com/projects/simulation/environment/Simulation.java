@@ -7,6 +7,9 @@ import com.projects.simulation.action.init.HerbivoreSpawnAction;
 import com.projects.simulation.action.init.PredatorSpawnAction;
 import com.projects.simulation.action.init.RockSpawnAction;
 import com.projects.simulation.action.init.TreeSpawnAction;
+import com.projects.simulation.action.turn.MoveAction;
+import com.projects.simulation.entity.animate.Herbivore;
+import com.projects.simulation.entity.inanimate.Grass;
 import com.projects.simulation.io.ConsoleManager;
 import com.projects.simulation.render.WorldMapRender;
 
@@ -31,9 +34,9 @@ public class Simulation {
     private void generateInitActions() {
         this.initActions = new ArrayList<>();
         initActions.add(new GrassSpawnAction());
-        initActions.add(new RockSpawnAction());
-        initActions.add(new TreeSpawnAction());
-        initActions.add(new PredatorSpawnAction());
+//        initActions.add(new RockSpawnAction());
+//        initActions.add(new TreeSpawnAction());
+//        initActions.add(new PredatorSpawnAction());
         initActions.add(new HerbivoreSpawnAction());
     }
 
@@ -52,7 +55,10 @@ public class Simulation {
     private void initWorld() {
         this.worldMap = new WorldMap(GameUtils.WORLD_MAP_HEIGHT, GameUtils.WORLD_MAP_WIDTH);
         for (Action action : initActions) {
-            action.perform(worldMap);
+//            action.perform(worldMap);
+
+            worldMap.setEntity(new Cell(1, 1), new Herbivore());
+            worldMap.setEntity(new Cell(10, 10), new Grass());
         }
     }
 
@@ -68,7 +74,11 @@ public class Simulation {
     }
 
     private void nextTurn() {
-
+        MoveAction moveAction = new MoveAction();
+        moveAction.perform(worldMap);
+        worldMapRender.renderMap(worldMap);
+        consoleManager.printGameFeatures();
+        processUserInput();
     }
 
     private void startSimulation() {

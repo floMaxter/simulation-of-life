@@ -2,12 +2,12 @@ package com.projects.simulation.environment;
 
 import java.util.Objects;
 
-public class Coordinates {
+public class Cell {
 
     private final Integer x;
     private final Integer y;
 
-    public Coordinates(Integer x, Integer y) {
+    public Cell(Integer x, Integer y) {
         this.x = x;
         this.y = y;
     }
@@ -24,7 +24,7 @@ public class Coordinates {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Coordinates that = (Coordinates) o;
+        Cell that = (Cell) o;
         return Objects.equals(x, that.x) && Objects.equals(y, that.y);
     }
 

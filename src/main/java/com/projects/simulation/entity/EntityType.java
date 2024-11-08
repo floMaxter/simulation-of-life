@@ -5,5 +5,6 @@ public enum EntityType {
     ROCK,
     TREE,
     HERBIVORE,
-    PREDATOR
+    PREDATOR,
+    GROUND
 }

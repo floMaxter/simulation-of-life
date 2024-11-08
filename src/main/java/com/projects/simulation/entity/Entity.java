@@ -1,17 +1,17 @@
 package com.projects.simulation.entity;
 
-import com.projects.simulation.environment.Coordinates;
+import com.projects.simulation.environment.Cell;
 
 public abstract class Entity {
 
-    protected Coordinates coordinates;
+    protected Cell cell;
     protected EntityType entityType;
 
     public EntityType getEntityType() {
         return entityType;
     }
 
-    public void setCoordinates(Coordinates coordinates) {
-        this.coordinates = coordinates;
+    public void setCell(Cell cell) {
+        this.cell = cell;
     }
 }
