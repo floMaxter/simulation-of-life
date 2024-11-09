@@ -1,6 +1,6 @@
 package com.projects.simulation.entity.inanimate;
 
-import com.projects.simulation.GameUtils;
+import com.projects.simulation.utils.GameUtils;
 import com.projects.simulation.entity.EntityType;
 
 public class Tree extends Nature {

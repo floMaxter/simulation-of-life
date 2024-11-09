@@ -1,6 +1,6 @@
 package com.projects.simulation.entity.animate;
 
-import com.projects.simulation.GameUtils;
+import com.projects.simulation.utils.GameUtils;
 import com.projects.simulation.entity.EntityType;
 import com.projects.simulation.environment.WorldMap;
 

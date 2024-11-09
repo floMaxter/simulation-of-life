@@ -1,6 +1,6 @@
 package com.projects.simulation.action.init;
 
-import com.projects.simulation.GameUtils;
+import com.projects.simulation.utils.GameUtils;
 import com.projects.simulation.action.Action;
 import com.projects.simulation.entity.Entity;
 import com.projects.simulation.environment.Cell;

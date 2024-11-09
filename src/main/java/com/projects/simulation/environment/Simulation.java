@@ -1,20 +1,19 @@
 package com.projects.simulation.environment;
 
-import com.projects.simulation.GameUtils;
+import com.projects.simulation.utils.GameUtils;
 import com.projects.simulation.action.Action;
 import com.projects.simulation.action.init.GrassSpawnAction;
 import com.projects.simulation.action.init.HerbivoreSpawnAction;
-import com.projects.simulation.action.init.PredatorSpawnAction;
-import com.projects.simulation.action.init.RockSpawnAction;
-import com.projects.simulation.action.init.TreeSpawnAction;
 import com.projects.simulation.action.turn.MoveAction;
 import com.projects.simulation.entity.animate.Herbivore;
 import com.projects.simulation.entity.inanimate.Grass;
 import com.projects.simulation.io.ConsoleManager;
 import com.projects.simulation.render.WorldMapRender;
+import com.projects.simulation.utils.MenuOptions;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class Simulation {
 
@@ -43,16 +42,12 @@ public class Simulation {
     public void startGame() {
         consoleManager.printWelcomeWords();
         createNewMap();
-    }
-
-    private void createNewMap() {
-        initWorld();
         worldMapRender.renderMap(worldMap);
         consoleManager.printGameFeatures();
         processUserInput();
     }
 
-    private void initWorld() {
+    private void createNewMap() {
         this.worldMap = new WorldMap(GameUtils.WORLD_MAP_HEIGHT, GameUtils.WORLD_MAP_WIDTH);
         for (Action action : initActions) {
 //            action.perform(worldMap);
@@ -63,13 +58,24 @@ public class Simulation {
     }
 
     private void processUserInput() {
-        int userChoice = consoleManager.readUserInput();
-        switch (userChoice) {
-            case GameUtils.OPTION_ONE_MOVE -> nextTurn();
-            case GameUtils.OPTION_ENDLESS_CYCLE -> startSimulation();
-            case GameUtils.OPTION_PAUSE_SIMULATION -> pauseSimulation();
-            case GameUtils.OPTION_NEW_MAP -> createNewMap();
-            case GameUtils.OPTION_EXIT -> endGame();
+        while (true) {
+            int userChoice = consoleManager.readUserInput();
+            Optional<MenuOptions> selectedOption = MenuOptions.fromNumber(userChoice);
+
+            if (selectedOption.isPresent()) {
+                switch (selectedOption.get()) {
+                    case OPTION_ONE_MOVE -> nextTurn();
+                    case OPTION_ENDLESS_CYCLE -> startSimulation();
+                    case OPTION_PAUSE_SIMULATION -> pauseSimulation();
+                    case OPTION_NEW_MAP -> createNewMap();
+                    case OPTION_EXIT -> {
+                        endGame();
+                        return;
+                    }
+                }
+            } else {
+                System.out.println("Invalid option. Please try again");
+            }
         }
     }
 
