@@ -81,7 +81,9 @@ public class WorldMap {
                 new Cell(cell.getX() + 1, cell.getY()),
                 new Cell(cell.getX() + 1, cell.getY() - 1),
                 new Cell(cell.getX(), cell.getY() - 1),
-                new Cell(cell.getX() - 1, cell.getY())
+                new Cell(cell.getX() - 1, cell.getY() - 1),
+                new Cell(cell.getX() - 1, cell.getY()),
+                new Cell(cell.getX() - 1, cell.getY() + 1)
         );
     }
 

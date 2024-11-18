@@ -35,13 +35,11 @@ public abstract class Creature extends Entity {
                 return Optional.of(pathToCell);
             }
 
-            if (currEntityType.equals(EntityType.GROUND) || isStartCell(currCell)) {
-                for (Cell adj : worldMap.getAdjacentCell(currCell)) {
-                    if (!pathToCell.isVisitedCell(adj)) {
-                        pathToCell.putDistToCell(adj, pathToCell.getDistToCell(currCell) + 1);
-                        pathToCell.putCameFromToCell(adj, currCell);
-                        queueCell.offer(adj);
-                    }
+            for (Cell adj : worldMap.getAdjacentCell(currCell)) {
+                if (!pathToCell.isVisitedCell(adj) && isGroundOrPrey(adj, worldMap)) {
+                    pathToCell.putDistToCell(adj, pathToCell.getDistToCell(currCell) + 1);
+                    pathToCell.putCameFromToCell(adj, currCell);
+                    queueCell.offer(adj);
                 }
             }
         }
@@ -60,8 +58,9 @@ public abstract class Creature extends Entity {
                 .anyMatch(entity -> worldMap.getEntityType(entity).equals(EntityType.GROUND));
     }
 
-    protected boolean isStartCell(Cell cell) {
-        return cell.equals(this.cell);
+    protected boolean isGroundOrPrey(Cell cell, WorldMap worldMap) {
+        return worldMap.getEntityType(cell).equals(EntityType.GROUND)
+                || worldMap.getEntityType(cell).equals(this.preyType);
     }
 
     protected boolean isTherePrey(WorldMap worldMap) {

@@ -54,7 +54,7 @@ public class Simulation {
         for (Action action : initActions) {
 //            action.perform(worldMap);
 
-            worldMap.setEntity(new Cell(1, 1), new Herbivore());
+            worldMap.setEntity(new Cell(9, 1), new Herbivore());
 
             worldMap.setEntity(new Cell(1, 10), new Grass());
 
