@@ -4,11 +4,10 @@ import com.projects.simulation.entity.Entity;
 import com.projects.simulation.entity.EntityType;
 import com.projects.simulation.environment.Cell;
 import com.projects.simulation.environment.PathToCell;
+import com.projects.simulation.environment.Pathfinder;
 import com.projects.simulation.environment.WorldMap;
 
-import java.util.ArrayDeque;
 import java.util.Optional;
-import java.util.Queue;
 
 public abstract class Creature extends Entity {
 
@@ -19,32 +18,8 @@ public abstract class Creature extends Entity {
     public abstract void makeMove(WorldMap worldMap);
 
     protected Optional<PathToCell> findPrey(WorldMap worldMap) {
-        Queue<Cell> queueCell = new ArrayDeque<>();
-        PathToCell pathToCell = new PathToCell(this.cell);
-
-        pathToCell.putDistToCell(this.cell, 0);
-        pathToCell.putCameFromToCell(this.cell, Cell.NULL_CELL);
-        queueCell.offer(this.cell);
-
-        while (!queueCell.isEmpty()) {
-            Cell currCell = queueCell.poll();
-            EntityType currEntityType = worldMap.getEntityType(currCell);
-
-            if (currEntityType.equals(this.preyType)) {
-                pathToCell.setTargetCell(currCell);
-                return Optional.of(pathToCell);
-            }
-
-            for (Cell adj : worldMap.getAdjacentCell(currCell)) {
-                if (!pathToCell.isVisitedCell(adj) && isGroundOrPrey(adj, worldMap)) {
-                    pathToCell.putDistToCell(adj, pathToCell.getDistToCell(currCell) + 1);
-                    pathToCell.putCameFromToCell(adj, currCell);
-                    queueCell.offer(adj);
-                }
-            }
-        }
-
-        return Optional.empty();
+        Pathfinder pathfinder = new Pathfinder(worldMap);
+        return pathfinder.findPath(cell, preyType);
     }
 
     protected boolean canEatPrey(Cell preyCell) {
@@ -56,11 +31,6 @@ public abstract class Creature extends Entity {
     protected boolean canMakeRandomMove(WorldMap worldMap) {
         return worldMap.getAdjacentCell(this.cell).stream()
                 .anyMatch(entity -> worldMap.getEntityType(entity).equals(EntityType.GROUND));
-    }
-
-    protected boolean isGroundOrPrey(Cell cell, WorldMap worldMap) {
-        return worldMap.getEntityType(cell).equals(EntityType.GROUND)
-                || worldMap.getEntityType(cell).equals(this.preyType);
     }
 
     protected boolean isTherePrey(WorldMap worldMap) {
