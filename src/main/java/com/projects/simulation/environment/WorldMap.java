@@ -98,6 +98,13 @@ public class WorldMap {
                 && cell.getY() > 0 && cell.getY() <= height;
     }
 
+    public boolean isThereEntity(EntityType entityType) {
+        return entities.entrySet().stream()
+                .anyMatch(entity -> entity.getValue()
+                        .getEntityType()
+                        .equals(entityType));
+    }
+
     public Integer getSize() {
         return height * width;
     }

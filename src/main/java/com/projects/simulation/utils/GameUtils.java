@@ -1,5 +1,7 @@
 package com.projects.simulation.utils;
 
+import java.util.Random;
+
 public class GameUtils {
 
     public static final int WORLD_MAP_HEIGHT = 10;
@@ -14,4 +16,9 @@ public class GameUtils {
 
     public static final int SPEED_HERBIVORE = 2;
     public static final int SPEED_PREDATOR = 3;
+
+    public static int getRandomIntInRange(int min, int max) {
+        Random random = new Random();
+        return random.nextInt((max - min) + 1) + min;
+    }
 }

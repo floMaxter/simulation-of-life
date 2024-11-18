@@ -1,5 +1,9 @@
 package com.projects.simulation.environment;
 
+import com.projects.simulation.action.init.PredatorSpawnAction;
+import com.projects.simulation.action.init.RockSpawnAction;
+import com.projects.simulation.action.init.TreeSpawnAction;
+import com.projects.simulation.entity.inanimate.Rock;
 import com.projects.simulation.utils.GameUtils;
 import com.projects.simulation.action.Action;
 import com.projects.simulation.action.init.GrassSpawnAction;
@@ -33,18 +37,16 @@ public class Simulation {
     private void generateInitActions() {
         this.initActions = new ArrayList<>();
         initActions.add(new GrassSpawnAction());
-//        initActions.add(new RockSpawnAction());
-//        initActions.add(new TreeSpawnAction());
-//        initActions.add(new PredatorSpawnAction());
+        initActions.add(new RockSpawnAction());
+        initActions.add(new TreeSpawnAction());
+        initActions.add(new PredatorSpawnAction());
         initActions.add(new HerbivoreSpawnAction());
     }
 
     public void startGame() {
         consoleManager.printWelcomeWords();
         createNewMap();
-        worldMapRender.renderMap(worldMap);
-        consoleManager.printGameFeatures();
-        processUserInput();
+        executeGameLoop();
     }
 
     private void createNewMap() {
@@ -53,8 +55,25 @@ public class Simulation {
 //            action.perform(worldMap);
 
             worldMap.setEntity(new Cell(1, 1), new Herbivore());
-            worldMap.setEntity(new Cell(10, 10), new Grass());
+
+            worldMap.setEntity(new Cell(1, 10), new Grass());
+
+            worldMap.setEntity(new Cell(1, 2), new Rock());
+            worldMap.setEntity(new Cell(2, 2), new Rock());
+            worldMap.setEntity(new Cell(3, 2), new Rock());
+            worldMap.setEntity(new Cell(4, 2), new Rock());
+            worldMap.setEntity(new Cell(5, 2), new Rock());
+            worldMap.setEntity(new Cell(6, 2), new Rock());
+            worldMap.setEntity(new Cell(7, 2), new Rock());
+            worldMap.setEntity(new Cell(8, 2), new Rock());
+            worldMap.setEntity(new Cell(9, 2), new Rock());
         }
+    }
+
+    private void executeGameLoop() {
+        worldMapRender.renderMap(worldMap);
+        consoleManager.printGameFeatures();
+        processUserInput();
     }
 
     private void processUserInput() {
@@ -82,9 +101,7 @@ public class Simulation {
     private void nextTurn() {
         MoveAction moveAction = new MoveAction();
         moveAction.perform(worldMap);
-        worldMapRender.renderMap(worldMap);
-        consoleManager.printGameFeatures();
-        processUserInput();
+        executeGameLoop();
     }
 
     private void startSimulation() {

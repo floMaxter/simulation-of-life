@@ -1,13 +1,13 @@
 package com.projects.simulation.action.init;
 
-import com.projects.simulation.utils.GameUtils;
 import com.projects.simulation.action.Action;
 import com.projects.simulation.entity.Entity;
-import com.projects.simulation.environment.Cell;
 import com.projects.simulation.entity.EntityType;
+import com.projects.simulation.environment.Cell;
 import com.projects.simulation.environment.WorldMap;
+import com.projects.simulation.utils.GameUtils;
 
-import java.util.Random;
+import static com.projects.simulation.utils.GameUtils.getRandomIntInRange;
 
 public abstract class SpawnAction extends Action {
 
@@ -37,10 +37,5 @@ public abstract class SpawnAction extends Action {
                 return cell;
             }
         }
-    }
-
-    private int getRandomIntInRange(int min, int max) {
-        Random random = new Random();
-        return random.nextInt((max - min) + 1) + min;
     }
 }
