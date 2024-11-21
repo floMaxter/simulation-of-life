@@ -14,8 +14,7 @@ public class ConsoleManager {
 
     public void printWelcomeWords() {
         System.out.println("____________________________________");
-        System.out.println("Welcome to the life simulation game");
-        System.out.println("The game has the following options:");
+        System.out.println("Welcome to the life simulation game!");
         System.out.println("____________________________________");
     }
 
@@ -23,10 +22,6 @@ public class ConsoleManager {
         for (MenuOptions options : MenuOptions.values()) {
             System.out.println(options.getOptionNumber() + ". " + options.getDescription());
         }
-    }
-
-    public void printInvalidOption() {
-
     }
 
     public int readUserInput() {

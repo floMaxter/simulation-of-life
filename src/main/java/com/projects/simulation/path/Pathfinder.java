@@ -1,12 +1,13 @@
-package com.projects.simulation.environment;
+package com.projects.simulation.path;
 
 import com.projects.simulation.entity.EntityType;
+import com.projects.simulation.environment.Cell;
+import com.projects.simulation.environment.WorldMap;
 
 import java.util.ArrayDeque;
-import java.util.Optional;
 import java.util.Queue;
 
-public class Pathfinder {
+public class Pathfinder implements PathfindingStrategy {
 
     private final WorldMap worldMap;
 
@@ -14,11 +15,12 @@ public class Pathfinder {
         this.worldMap = worldMap;
     }
 
-    public Optional<PathToCell> findPath(Cell startCell, EntityType searchEntityType) {
-        return BFS(startCell, searchEntityType);
+    @Override
+    public PathToCell findPath(Cell startCell, EntityType searchEntityType) {
+        return BFS(startCell, searchEntityType, worldMap);
     }
 
-    private Optional<PathToCell> BFS(Cell startCell, EntityType searchEntityType) {
+    private PathToCell BFS(Cell startCell, EntityType searchEntityType, WorldMap worldMap) {
         Queue<Cell> queueCell = new ArrayDeque<>();
         PathToCell pathToCell = new PathToCell(startCell);
 
@@ -32,11 +34,11 @@ public class Pathfinder {
 
             if (currEntityType.equals(searchEntityType)) {
                 pathToCell.setTargetCell(currCell);
-                return Optional.of(pathToCell);
+                break;
             }
 
             for (Cell adj : worldMap.getAdjacentCell(currCell)) {
-                if (!pathToCell.isVisitedCell(adj) && isGroundOrTargetCell(adj, searchEntityType)) {
+                if (pathToCell.isUnvisitedCell(adj) && isGroundOrTargetCell(adj, searchEntityType)) {
                     pathToCell.putDistToCell(adj, pathToCell.getDistToCell(currCell) + 1);
                     pathToCell.putCameFromToCell(adj, currCell);
                     queueCell.offer(adj);
@@ -44,11 +46,19 @@ public class Pathfinder {
             }
         }
 
-        return Optional.empty();
+        return pathToCell;
     }
 
-    protected boolean isGroundOrTargetCell(Cell cell, EntityType searchEntityType) {
-        return worldMap.getEntityType(cell).equals(EntityType.GROUND)
-                || worldMap.getEntityType(cell).equals(searchEntityType);
+
+    private boolean isGroundOrTargetCell(Cell cell, EntityType searchEntityType) {
+        return isGroundCell(cell) || isSearchingCell(cell, searchEntityType);
+    }
+
+    private boolean isGroundCell(Cell cell) {
+        return worldMap.getEntityType(cell).equals(EntityType.GROUND);
+    }
+
+    private boolean isSearchingCell(Cell cell, EntityType searchEntityType) {
+        return worldMap.getEntityType(cell).equals(searchEntityType);
     }
 }

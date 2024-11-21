@@ -1,4 +1,6 @@
-package com.projects.simulation.environment;
+package com.projects.simulation.path;
+
+import com.projects.simulation.environment.Cell;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,19 +14,19 @@ public class PathToCell {
     private final Cell startCell;
     private Cell targetCell;
     private final Map<Cell, Cell> cameFromMap;
-    private final Map<Cell, Integer> distToTarget;
+    private final Map<Cell, Integer> distToCells;
     private final List<Cell> path;
 
     public PathToCell(Cell startCell) {
         this.startCell = startCell;
         this.targetCell = Cell.NULL_CELL;
         this.cameFromMap = new HashMap<>();
-        this.distToTarget = new HashMap<>();
+        this.distToCells = new HashMap<>();
         this.path = new ArrayList<>();
     }
 
     public void putDistToCell(Cell cell, Integer dist) {
-        this.distToTarget.put(cell, dist);
+        this.distToCells.put(cell, dist);
     }
 
     public void putCameFromToCell(Cell to, Cell from) {
@@ -36,7 +38,11 @@ public class PathToCell {
     }
 
     public Integer getDistToCell(Cell cell) {
-        return this.distToTarget.get(cell);
+        return this.distToCells.get(cell);
+    }
+
+    public Map<Cell, Integer> getDistToCells() {
+        return this.distToCells;
     }
 
     public Cell getTargetCell() {
@@ -46,6 +52,7 @@ public class PathToCell {
     public Cell getStartCell() {
         return this.startCell;
     }
+
 
     /**
      * Retrieves the path from the start cell to the target cell, if it exists.
@@ -63,7 +70,7 @@ public class PathToCell {
         if (!path.isEmpty()) {
             return Optional.of(path);
         }
-        if (targetCell == Cell.NULL_CELL) {
+        if (targetCell == Cell.NULL_CELL || targetCell == startCell) {
             return Optional.empty();
         }
 
@@ -74,7 +81,11 @@ public class PathToCell {
         return Optional.of(path);
     }
 
-    public boolean isVisitedCell(Cell cell) {
-        return distToTarget.containsKey(cell);
+    public boolean isFoundTarget() {
+        return targetCell != Cell.NULL_CELL;
+    }
+
+    public boolean isUnvisitedCell(Cell cell) {
+        return !distToCells.containsKey(cell);
     }
 }

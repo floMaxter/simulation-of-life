@@ -15,7 +15,7 @@ public abstract class SpawnAction extends Action {
     public void perform(WorldMap worldMap) {
         int countTypeOnMap = getRandomNumberOfEntities(worldMap);
         for (int i = 0; i < countTypeOnMap; i++) {
-            Cell randomCell = getRandomCoordinates(worldMap);
+            Cell randomCell = getRandomCell(worldMap);
             worldMap.setEntity(randomCell, spawnEntity());
         }
     }
@@ -28,11 +28,11 @@ public abstract class SpawnAction extends Action {
         return getRandomIntInRange(minNumberOfTypeEntity, limitTypeForMap);
     }
 
-    private Cell getRandomCoordinates(WorldMap map) {
+    private Cell getRandomCell(WorldMap map) {
         while (true) {
-            int randHeight = getRandomIntInRange(GameUtils.MIN_COORDINATE_HEIGHT, GameUtils.MAX_COORDINATE_HEIGHT);
-            int randWidth = getRandomIntInRange(GameUtils.MIN_COORDINATE_HEIGHT, GameUtils.MAX_COORDINATE_HEIGHT);
-            Cell cell = new Cell(randHeight, randWidth);
+            int randX = getRandomIntInRange(GameUtils.MIN_COORDINATE_HEIGHT, GameUtils.MAX_COORDINATE_HEIGHT);
+            int randY = getRandomIntInRange(GameUtils.MIN_COORDINATE_HEIGHT, GameUtils.MAX_COORDINATE_HEIGHT);
+            Cell cell = new Cell(randX, randY);
             if (map.isEmptyCell(cell)) {
                 return cell;
             }

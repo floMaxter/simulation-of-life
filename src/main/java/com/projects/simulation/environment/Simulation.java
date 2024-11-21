@@ -7,6 +7,7 @@ import com.projects.simulation.action.init.PredatorSpawnAction;
 import com.projects.simulation.action.init.RockSpawnAction;
 import com.projects.simulation.action.init.TreeSpawnAction;
 import com.projects.simulation.action.turn.MoveAction;
+import com.projects.simulation.entity.animate.Herbivore;
 import com.projects.simulation.io.ConsoleManager;
 import com.projects.simulation.render.WorldMapRender;
 import com.projects.simulation.utils.GameUtils;
@@ -36,9 +37,9 @@ public class Simulation {
 
     private void generateInitActions() {
         initActions.add(new GrassSpawnAction());
-        initActions.add(new RockSpawnAction());
-        initActions.add(new TreeSpawnAction());
-        initActions.add(new PredatorSpawnAction());
+//        initActions.add(new RockSpawnAction());
+//        initActions.add(new TreeSpawnAction());
+//        initActions.add(new PredatorSpawnAction());
         initActions.add(new HerbivoreSpawnAction());
     }
 
@@ -92,7 +93,15 @@ public class Simulation {
     }
 
     private void startSimulation() {
-
+        while (true) {
+            try {
+                Thread.sleep(1000);
+                nextTurn();
+                updateUI();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     private void pauseSimulation() {
