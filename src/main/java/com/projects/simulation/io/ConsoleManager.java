@@ -1,5 +1,7 @@
 package com.projects.simulation.io;
 
+import com.projects.simulation.entity.EntityType;
+import com.projects.simulation.environment.WorldMap;
 import com.projects.simulation.utils.MenuOptions;
 
 import java.util.Scanner;
@@ -22,6 +24,15 @@ public class ConsoleManager {
         for (MenuOptions options : MenuOptions.values()) {
             System.out.println(options.getOptionNumber() + ". " + options.getDescription());
         }
+    }
+
+    public void printNumberOfEntities(WorldMap worldMap) {
+        System.out.println("____________________________________");
+        for (EntityType entityType : EntityType.values()) {
+            if (entityType.equals(EntityType.GROUND)) continue;
+            System.out.println(entityType.getName() + ": " + worldMap.getNumberOfEntity(entityType));
+        }
+        System.out.println("____________________________________");
     }
 
     public int readUserInput() {
