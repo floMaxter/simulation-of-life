@@ -29,16 +29,21 @@ public class WorldMap {
         entities.put(cell, entity);
     }
 
-    public void makeMove(Cell from, Cell to) {
-        Entity entity = entities.get(from);
-        entity.setCell(to);
-        entities.remove(from);
-        entities.put(to, entity);
+    public void makeMove(Cell distinationCell, Creature creature) {
+        creature.setCell(distinationCell);
+        entities.put(distinationCell, creature);
     }
 
-    //TODO: check that method return Optional.empty when coordinates is empty
     public Optional<Entity> getEntity(Cell cell) {
         return Optional.ofNullable(entities.get(cell));
+    }
+
+    public <T extends Entity> Optional<T> getEntityAs(Cell cell, Class<T> entityTypeClass) {
+        Entity entity = entities.get(cell);
+        if (entityTypeClass.isInstance(entity)) {
+            return Optional.of(entityTypeClass.cast(entity));
+        }
+        return Optional.empty();
     }
 
     public EntityType getEntityType(Cell cell) {
@@ -46,7 +51,7 @@ public class WorldMap {
         return entity == null ? EntityType.GROUND : entity.getEntityType();
     }
 
-    public Map<Cell, Creature> getCreatureCells() {
+    public Map<Cell, Creature> getCellsWithCreature() {
         Map<Cell, Creature> creatureCells = new HashMap<>();
         for (Map.Entry<Cell, Entity> entry : this.entities.entrySet()) {
             if (entry.getValue() instanceof Creature) {
@@ -89,6 +94,12 @@ public class WorldMap {
 
     public void deleteEntity(Cell cell) {
         entities.remove(cell);
+    }
+
+    public boolean isAdjacentCells(Cell f, Cell s) {
+        int dx = Math.abs(f.getX() - s.getX());
+        int dy = Math.abs(f.getY() - s.getY());
+        return (dx <= 1 && dy <= 1) && !(dx == 0 && dy == 0);
     }
 
     public boolean isEmptyCell(Cell cell) {

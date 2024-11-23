@@ -37,9 +37,9 @@ public class Simulation {
 
     private void generateInitActions() {
         initActions.add(new GrassSpawnAction());
-//        initActions.add(new RockSpawnAction());
-//        initActions.add(new TreeSpawnAction());
-//        initActions.add(new PredatorSpawnAction());
+        initActions.add(new RockSpawnAction());
+        initActions.add(new TreeSpawnAction());
+        initActions.add(new PredatorSpawnAction());
         initActions.add(new HerbivoreSpawnAction());
     }
 
