@@ -18,17 +18,15 @@ import java.util.Optional;
 
 public class Simulation {
 
-    private final Integer moveCount;
+    private Integer moveCount;
     private boolean isSimulationRunning;
     private WorldMap worldMap;
-    private final ConsoleManager consoleManager;
     private final WorldMapRender worldMapRender;
     private final List<Action> initActions;
 
     public Simulation() {
         this.moveCount = 0;
         isSimulationRunning = false;
-        this.consoleManager = new ConsoleManager();
         this.worldMapRender = new WorldMapRender();
         this.initActions = new ArrayList<>();
         generateInitActions();
@@ -43,19 +41,19 @@ public class Simulation {
     }
 
     public void startGame() {
-        consoleManager.printWelcomeWords();
+        ConsoleManager.printWelcomeWords();
         createNewMap();
 
         boolean isRunning = true;
         while (isRunning) {
             updateUI();
 
-            int userChoice = consoleManager.readUserInput();
+            int userChoice = ConsoleManager.readUserInput();
             Optional<MenuOptions> selectedOption = MenuOptions.fromNumber(userChoice);
             if (selectedOption.isPresent()) {
                 isRunning = processUserInput(selectedOption.get());
             } else {
-                System.out.println("Invalid option. Please try again");
+                ConsoleManager.printInfo("Invalid option. Please try again");
             }
         }
     }
@@ -68,9 +66,10 @@ public class Simulation {
     }
 
     private void updateUI() {
-        consoleManager.printNumberOfEntities(worldMap);
+        ConsoleManager.printInfo("Number of moves: " + moveCount);
+        ConsoleManager.printNumberOfEntities(worldMap);
         worldMapRender.renderMap(worldMap);
-        consoleManager.printGameFeatures();
+        ConsoleManager.printGameFeatures();
     }
 
     private boolean processUserInput(MenuOptions options) {
@@ -90,6 +89,7 @@ public class Simulation {
     private void nextTurn() {
         MoveAction moveAction = new MoveAction();
         moveAction.perform(worldMap);
+        moveCount++;
     }
 
     private void startSimulation() {
@@ -105,11 +105,11 @@ public class Simulation {
     }
 
     private void pauseSimulation() {
-        System.out.println("Simulation paused. Choose an option to continue.");
+        ConsoleManager.printInfo("Simulation paused. Choose an option to continue.");
         isSimulationRunning = false;
     }
 
     private void endGame() {
-        consoleManager.printGoodByeWords();
+        ConsoleManager.printGoodByeWords();
     }
 }

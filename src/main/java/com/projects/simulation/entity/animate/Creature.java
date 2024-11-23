@@ -4,6 +4,7 @@ import com.projects.simulation.entity.Entity;
 import com.projects.simulation.entity.EntityType;
 import com.projects.simulation.environment.Cell;
 import com.projects.simulation.environment.WorldMap;
+import com.projects.simulation.io.ConsoleManager;
 import com.projects.simulation.path.PathToCell;
 import com.projects.simulation.path.Pathfinder;
 import com.projects.simulation.path.PathfindingStrategy;
@@ -23,9 +24,10 @@ public abstract class Creature extends Entity {
     public abstract void makeMove(WorldMap worldMap);
 
     protected void makeRandomMove(PathToCell pathToCell, WorldMap worldMap) {
+        int maxSearchRadius = speed + 1;
         List<Cell> potentialTargetCells = pathToCell.getDistToCells()
                 .entrySet().stream()
-                .filter(entry -> entry.getValue() <= this.speed + 1)
+                .filter(entry -> entry.getValue() <= maxSearchRadius)
                 .filter(entry -> entry.getValue() > 0)
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toList());
@@ -54,7 +56,7 @@ public abstract class Creature extends Entity {
                 worldMap.makeMove(path.get(i), this);
             }
         } else {
-            System.out.println("Path from " + pathToCell.getStartCell() + " is empty.");
+            ConsoleManager.printInfo("Path from " + pathToCell.getStartCell() + " is empty.");
         }
     }
 
