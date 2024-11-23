@@ -7,7 +7,6 @@ import com.projects.simulation.action.init.PredatorSpawnAction;
 import com.projects.simulation.action.init.RockSpawnAction;
 import com.projects.simulation.action.init.TreeSpawnAction;
 import com.projects.simulation.action.turn.MoveAction;
-import com.projects.simulation.entity.animate.Herbivore;
 import com.projects.simulation.io.ConsoleManager;
 import com.projects.simulation.render.WorldMapRender;
 import com.projects.simulation.utils.GameUtils;
@@ -69,6 +68,7 @@ public class Simulation {
     }
 
     private void updateUI() {
+        consoleManager.printNumberOfEntities(worldMap);
         worldMapRender.renderMap(worldMap);
         consoleManager.printGameFeatures();
     }

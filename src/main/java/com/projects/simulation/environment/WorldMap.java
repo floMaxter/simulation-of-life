@@ -30,6 +30,7 @@ public class WorldMap {
     }
 
     public void makeMove(Cell distinationCell, Creature creature) {
+        deleteEntity(creature.getCell());
         creature.setCell(distinationCell);
         entities.put(distinationCell, creature);
     }
@@ -112,10 +113,8 @@ public class WorldMap {
     }
 
     public boolean isThereEntity(EntityType entityType) {
-        return entities.entrySet().stream()
-                .anyMatch(entity -> entity.getValue()
-                        .getEntityType()
-                        .equals(entityType));
+        return entities.values().stream()
+                .anyMatch(entity -> entity.getEntityType().equals(entityType));
     }
 
     public Integer getSize() {
@@ -128,5 +127,11 @@ public class WorldMap {
 
     public Integer getWidth() {
         return width;
+    }
+
+    public Integer getNumberOfEntity(EntityType entityType) {
+        return Math.toIntExact(entities.values().stream()
+                .filter(entity -> entity.getEntityType().equals(entityType))
+                .count());
     }
 }
