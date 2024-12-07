@@ -24,7 +24,7 @@ public class Herbivore extends Creature {
         } else if (canMakeStep(worldMap)) {
             makeRandomMove(pathToCell, worldMap);
         } else {
-            ConsoleManager.printInfo("Herbivore " + this.cell +
+            ConsoleManager.printMessage("Herbivore " + this.cell +
                     "can't make a move because it is barricaded. The move is skipped.");
         }
     }

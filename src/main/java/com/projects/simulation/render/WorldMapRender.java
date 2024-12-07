@@ -5,10 +5,10 @@ import com.projects.simulation.environment.WorldMap;
 
 public class WorldMapRender {
 
-    public static final String PREDATOR_EMOJI = "\uD83E\uDD81";
+    public static final String PREDATOR_EMOJI = "\uD83D\uDC3A";
     public static final String HERBIVORE_EMOJI = "\uD83D\uDC37";
     public static final String TREE_EMOJI = "\uD83C\uDF33";
-    public static final String ROCK_EMOJI = "\uD83E\uDEA8";
+    public static final String ROCK_EMOJI = "\uD83C\uDFD4";
     public static final String GRASS_EMOJI = "\uD83C\uDF3D";
     public static final String GROUND_EMOJI = "\u2B1B";
 

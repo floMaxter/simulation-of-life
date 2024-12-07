@@ -39,7 +39,7 @@ public class ConsoleManager {
         System.out.println("____________________________________");
     }
 
-    public static void printInfo(String message) {
+    public static void printMessage(String message) {
         System.out.println("____________________________________");
         System.out.println(message);
         System.out.println("____________________________________");

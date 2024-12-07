@@ -56,7 +56,7 @@ public abstract class Creature extends Entity {
                 worldMap.makeMove(path.get(i), this);
             }
         } else {
-            ConsoleManager.printInfo("Path from " + pathToCell.getStartCell() + " is empty.");
+            ConsoleManager.printMessage("Path from " + pathToCell.getStartCell() + " is empty.");
         }
     }
 

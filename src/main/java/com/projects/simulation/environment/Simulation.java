@@ -7,6 +7,7 @@ import com.projects.simulation.action.init.PredatorSpawnAction;
 import com.projects.simulation.action.init.RockSpawnAction;
 import com.projects.simulation.action.init.TreeSpawnAction;
 import com.projects.simulation.action.turn.MoveAction;
+import com.projects.simulation.entity.EntityType;
 import com.projects.simulation.io.ConsoleManager;
 import com.projects.simulation.render.WorldMapRender;
 import com.projects.simulation.utils.GameUtils;
@@ -53,7 +54,7 @@ public class Simulation {
             if (selectedOption.isPresent()) {
                 isRunning = processUserInput(selectedOption.get());
             } else {
-                ConsoleManager.printInfo("Invalid option. Please try again");
+                ConsoleManager.printMessage("Invalid option. Please try again");
             }
         }
     }
@@ -66,7 +67,7 @@ public class Simulation {
     }
 
     private void updateUI() {
-        ConsoleManager.printInfo("Number of moves: " + moveCount);
+        ConsoleManager.printMessage("Number of moves: " + moveCount);
         ConsoleManager.printNumberOfEntities(worldMap);
         worldMapRender.renderMap(worldMap);
         ConsoleManager.printGameFeatures();
@@ -75,7 +76,14 @@ public class Simulation {
     private boolean processUserInput(MenuOptions options) {
         switch (options) {
             case OPTION_ONE_MOVE -> nextTurn();
-            case OPTION_ENDLESS_SIMULATION -> startSimulation();
+            case OPTION_ENDLESS_SIMULATION ->  {
+                boolean simulationResult = startSimulation();
+                if (!simulationResult) {
+                    createNewMap();
+                    return true;
+                }
+                return false;
+            }
             case OPTION_PAUSE_SIMULATION -> pauseSimulation();
             case OPTION_NEW_MAP -> createNewMap();
             case OPTION_EXIT -> {
@@ -92,12 +100,17 @@ public class Simulation {
         moveCount++;
     }
 
-    private void startSimulation() {
+    private boolean startSimulation() {
         while (true) {
             try {
-                Thread.sleep(1000);
-                nextTurn();
-                updateUI();
+                if (canContinueSimulation()) {
+                    Thread.sleep(1000);
+                    nextTurn();
+                    updateUI();
+                } else {
+                    ConsoleManager.printMessage("The simulation can no longer continue on this map");
+                    return false;
+                }
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
@@ -105,11 +118,16 @@ public class Simulation {
     }
 
     private void pauseSimulation() {
-        ConsoleManager.printInfo("Simulation paused. Choose an option to continue.");
+        ConsoleManager.printMessage("Simulation paused. Choose an option to continue.");
         isSimulationRunning = false;
     }
 
     private void endGame() {
         ConsoleManager.printGoodByeWords();
+    }
+
+    private boolean canContinueSimulation() {
+        return worldMap.isEntityTypePresent(EntityType.PREDATOR) &&
+                worldMap.isEntityTypePresent(EntityType.HERBIVORE);
     }
 }

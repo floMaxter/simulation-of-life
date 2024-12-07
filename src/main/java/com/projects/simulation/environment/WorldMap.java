@@ -112,7 +112,7 @@ public class WorldMap {
                 && cell.getY() > 0 && cell.getY() <= height;
     }
 
-    public boolean isThereEntity(EntityType entityType) {
+    public boolean isEntityTypePresent(EntityType entityType) {
         return entities.values().stream()
                 .anyMatch(entity -> entity.getEntityType().equals(entityType));
     }
