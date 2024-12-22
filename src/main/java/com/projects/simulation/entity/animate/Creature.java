@@ -21,7 +21,19 @@ public abstract class Creature extends Entity {
     protected int healthPoint;
     protected EntityType preyType;
 
-    public abstract void makeMove(WorldMap worldMap);
+    public void makeMove(WorldMap worldMap) {
+        PathToCell pathToCell = findPrey(preyType, worldMap);
+        if (isFoundPrey(pathToCell)) {
+            handlePreyInteraction(pathToCell, worldMap);
+        } else if (canMakeStep(worldMap)) {
+            makeRandomMove(pathToCell, worldMap);
+        } else {
+            ConsoleWriter.printMessage(this.entityType.getName() + " " + this.cell +
+                    " can't make a move because it is barricaded. The move is skipped.");
+        }
+    }
+
+    protected abstract void handlePreyInteraction(PathToCell pathToCell, WorldMap worldMap);
 
     protected void makeRandomMove(PathToCell pathToCell, WorldMap worldMap) {
         int maxSearchRadius = speed + 1;
@@ -69,16 +81,8 @@ public abstract class Creature extends Entity {
         return pathToCell.isFoundTarget();
     }
 
-    public int getSpeed() {
-        return this.speed;
-    }
-
     public int getHealthPoint() {
         return this.healthPoint;
-    }
-
-    public EntityType getPreyType() {
-        return preyType;
     }
 
     public void setHealthPoint(int healthPoint) {

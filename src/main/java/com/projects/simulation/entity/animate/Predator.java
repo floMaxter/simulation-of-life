@@ -3,7 +3,6 @@ package com.projects.simulation.entity.animate;
 import com.projects.simulation.entity.EntityType;
 import com.projects.simulation.environment.Cell;
 import com.projects.simulation.environment.WorldMap;
-import com.projects.simulation.io.ConsoleWriter;
 import com.projects.simulation.path.PathToCell;
 import com.projects.simulation.utils.GameUtils;
 
@@ -21,19 +20,7 @@ public class Predator extends Creature {
     }
 
     @Override
-    public void makeMove(WorldMap worldMap) {
-        PathToCell pathToCell = findPrey(preyType, worldMap);
-        if (isFoundPrey(pathToCell)) {
-            handlePreyInteraction(pathToCell, worldMap);
-        } else if (canMakeStep(worldMap)) {
-            makeRandomMove(pathToCell, worldMap);
-        } else {
-            ConsoleWriter.printMessage("Predator " + this.cell +
-                    "can't make a move because it is barricaded. The move is skipped.");
-        }
-    }
-
-    private void handlePreyInteraction(PathToCell pathToCell, WorldMap worldMap) {
+    protected void handlePreyInteraction(PathToCell pathToCell, WorldMap worldMap) {
         Cell preyCell = pathToCell.getTargetCell();
         if (worldMap.isAdjacentCells(this.cell, preyCell)) {
             handlePreyAction(preyCell, worldMap);

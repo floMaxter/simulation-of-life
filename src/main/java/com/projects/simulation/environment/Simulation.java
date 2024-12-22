@@ -89,17 +89,6 @@ public class Simulation {
         }
     }
 
-    private Optional<MenuOptions> processUserInput(BlockingQueue<Integer> queueUserInputs) {
-        int userChoice;
-        try {
-            userChoice = queueUserInputs.take();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-
-        return MenuOptions.fromNumber(userChoice);
-    }
-
     private void nextTurn() {
         MoveAction moveAction = new MoveAction();
         moveAction.perform(worldMap);
@@ -109,38 +98,25 @@ public class Simulation {
     private void startEndlessSimulation(BlockingQueue<Integer> queueInput) {
         this.isRunningSimulation = true;
         while (isSimulationActive(queueInput)) {
-            try {
-                if (needHerbivoreRegeneration()) {
-                    generateHerbivores();
-                }
-
-                nextTurn();
-                updateUI();
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+            if (needHerbivoreRegeneration()) {
+                generateHerbivores();
             }
+            nextTurn();
+            updateUI();
         }
-        this.isRunningSimulation = false;
     }
 
     private void startExtinctionSimulation(BlockingQueue<Integer> queueInput) {
         this.isRunningSimulation = true;
         while (isSimulationActive(queueInput)) {
-            try {
-                if (canContinueSimulation()) {
-                    nextTurn();
-                    updateUI();
-                    Thread.sleep(1000);
-                } else {
-                    ConsoleWriter.printMessage("The simulation can no longer continue on this map");
-                    break;
-                }
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+            if (canContinueSimulation()) {
+                nextTurn();
+                updateUI();
+            } else {
+                ConsoleWriter.printMessage("The simulation can no longer continue on this map");
+                break;
             }
         }
-        this.isRunningSimulation = false;
     }
 
     private void pauseSimulation() {
@@ -152,15 +128,26 @@ public class Simulation {
         }
     }
 
-    private void generateHerbivores() {
-        HerbivoreSpawnAction spawnAction = new HerbivoreSpawnAction();
-        spawnAction.perform(this.worldMap);
-    }
-
     private void endGame() {
         ConsoleWriter.printGoodByeWords();
         this.isRunningSimulation = false;
         this.isRunningGame = false;
+    }
+
+    private Optional<MenuOptions> processUserInput(BlockingQueue<Integer> queueUserInputs) {
+        int userChoice;
+        try {
+            userChoice = queueUserInputs.take();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        return MenuOptions.fromNumber(userChoice);
+    }
+
+    private void generateHerbivores() {
+        HerbivoreSpawnAction spawnAction = new HerbivoreSpawnAction();
+        spawnAction.perform(this.worldMap);
     }
 
     private boolean needHerbivoreRegeneration() {
@@ -180,11 +167,20 @@ public class Simulation {
         ConsoleWriter.printMessage("Number of moves: " + moveCount);
         worldMapRender.renderMap(worldMap);
         ConsoleWriter.printGameFeatures();
+        sleep(1000);
     }
 
     private void printGreeting() {
         ConsoleWriter.printWelcomeWords();
         worldMapRender.renderMap(worldMap);
         ConsoleWriter.printGameFeatures();
+    }
+
+    private void sleep(int milliseconds) {
+        try {
+            Thread.sleep(milliseconds);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
