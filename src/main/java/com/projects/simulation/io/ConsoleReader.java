@@ -20,7 +20,6 @@ public class ConsoleReader implements Runnable {
                 if (scanner.hasNextInt()) {
                     input = scanner.nextInt();
                     queue.put(input);
-                    break;
                 } else {
                     System.out.println("Invalid input. Please enter a number.");
                     scanner.next();

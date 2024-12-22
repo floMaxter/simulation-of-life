@@ -3,6 +3,7 @@ package com.projects.simulation.environment;
 import com.projects.simulation.action.Action;
 import com.projects.simulation.action.init.*;
 import com.projects.simulation.action.turn.MoveAction;
+import com.projects.simulation.entity.EntityType;
 import com.projects.simulation.io.ConsoleReader;
 import com.projects.simulation.io.ConsoleWriter;
 import com.projects.simulation.render.WorldMapRender;
@@ -51,16 +52,16 @@ public class Simulation {
     }
 
     public void startGame() {
-        BlockingQueue<Integer> queueUserInputs = new ArrayBlockingQueue<>(100);
-        ConsoleReader consoleReader = new ConsoleReader(queueUserInputs);
-        Thread inputReadingThread;
+        BlockingQueue<Integer> queueUserInputs = new ArrayBlockingQueue<>(10);
 
-        updateUI();
+        ConsoleReader consoleReader = new ConsoleReader(queueUserInputs);
+        Thread inputReadingThread = new Thread(consoleReader);
+        inputReadingThread.setDaemon(true);
+        inputReadingThread.start();
+
+        printGreeting();
         this.isRunningGame = true;
         while (isRunningGame) {
-            inputReadingThread = new Thread(consoleReader);
-            inputReadingThread.start();
-
             processGameExecution(queueUserInputs);
         }
     }
@@ -75,11 +76,12 @@ public class Simulation {
                     updateUI();
                 }
                 case OPTION_ENDLESS_SIMULATION -> startEndlessSimulation(queueUserInputs);
-                case OPTION_PAUSE_SIMULATION -> pauseSimulation();
+                case OPTION_EXTINCTION_SIMULATION -> startExtinctionSimulation(queueUserInputs);
                 case OPTION_NEW_MAP -> {
                     createNewMap();
                     updateUI();
                 }
+                case OPTION_PAUSE_SIMULATION -> pauseSimulation();
                 case OPTION_EXIT -> endGame();
             }
         } else {
@@ -104,39 +106,46 @@ public class Simulation {
         moveCount++;
     }
 
-    /*private boolean startExtinctionSimulation() {
-        while (true) {
+    private void startEndlessSimulation(BlockingQueue<Integer> queueInput) {
+        this.isRunningSimulation = true;
+        while (isSimulationActive(queueInput)) {
+            try {
+                nextTurn();
+                updateUI();
+                Thread.sleep(1500);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        this.isRunningSimulation = false;
+    }
+
+    private void startExtinctionSimulation(BlockingQueue<Integer> queueInput) {
+        this.isRunningSimulation = true;
+        while (isSimulationActive(queueInput)) {
             try {
                 if (canContinueSimulation()) {
-                    Thread.sleep(1000);
+                    Thread.sleep(1500);
                     nextTurn();
                     updateUI();
                 } else {
                     ConsoleWriter.printMessage("The simulation can no longer continue on this map");
-                    return false;
+                    break;
                 }
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
         }
-    }*/
-
-    private void startEndlessSimulation(BlockingQueue<Integer> queueInput) {
-        this.isRunningSimulation = true;
-        while (!isGameOnPause(queueInput)) {
-            try {
-                Thread.sleep(1000);
-                nextTurn();
-                updateUI();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        }
+        this.isRunningSimulation = false;
     }
 
     private void pauseSimulation() {
-        this.isRunningSimulation = false;
-        ConsoleWriter.printMessage("Simulation paused. Choose an option to continue.");
+        if (!isRunningSimulation) {
+            ConsoleWriter.printMessage("The Simulation isn't active");
+        } else {
+            this.isRunningSimulation = false;
+            ConsoleWriter.printMessage("Simulation paused. Choose an option to continue.");
+        }
     }
 
     private void endGame() {
@@ -145,18 +154,23 @@ public class Simulation {
         this.isRunningGame = false;
     }
 
-    private boolean isGameOnPause(BlockingQueue<Integer> queue) {
-        return !isRunningSimulation || !queue.isEmpty();
+    private boolean isSimulationActive(BlockingQueue<Integer> queue) {
+        return isRunningSimulation && queue.isEmpty();
     }
 
-    /*private boolean canContinueSimulation() {
+    private boolean canContinueSimulation() {
         return worldMap.isEntityTypePresent(EntityType.PREDATOR) &&
                 worldMap.isEntityTypePresent(EntityType.HERBIVORE);
-    }*/
+    }
 
     private void updateUI() {
         ConsoleWriter.printMessage("Number of moves: " + moveCount);
-        ConsoleWriter.printNumberOfEntities(worldMap);
+        worldMapRender.renderMap(worldMap);
+        ConsoleWriter.printGameFeatures();
+    }
+
+    private void printGreeting() {
+        ConsoleWriter.printWelcomeWords();
         worldMapRender.renderMap(worldMap);
         ConsoleWriter.printGameFeatures();
     }
