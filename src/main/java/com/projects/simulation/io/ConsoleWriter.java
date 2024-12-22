@@ -5,10 +5,17 @@ import com.projects.simulation.environment.WorldMap;
 import com.projects.simulation.utils.MenuOptions;
 
 import java.util.Scanner;
+import java.util.concurrent.BlockingQueue;
 
-public class ConsoleManager {
+public class ConsoleWriter {
+
+    private final BlockingQueue<Integer> queue;
 
     private static final Scanner scanner = new Scanner(System.in);
+
+    public ConsoleWriter(BlockingQueue<Integer> queue) {
+        this.queue = queue;
+    }
 
     public static void printWelcomeWords() {
         System.out.println("____________________________________");

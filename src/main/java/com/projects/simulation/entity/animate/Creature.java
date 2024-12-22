@@ -4,7 +4,7 @@ import com.projects.simulation.entity.Entity;
 import com.projects.simulation.entity.EntityType;
 import com.projects.simulation.environment.Cell;
 import com.projects.simulation.environment.WorldMap;
-import com.projects.simulation.io.ConsoleManager;
+import com.projects.simulation.io.ConsoleWriter;
 import com.projects.simulation.path.PathToCell;
 import com.projects.simulation.path.Pathfinder;
 import com.projects.simulation.path.PathfindingStrategy;
@@ -56,7 +56,7 @@ public abstract class Creature extends Entity {
                 worldMap.makeMove(path.get(i), this);
             }
         } else {
-            ConsoleManager.printMessage("Path from " + pathToCell.getStartCell() + " is empty.");
+            ConsoleWriter.printMessage("Path from " + pathToCell.getStartCell() + " is empty.");
         }
     }
 

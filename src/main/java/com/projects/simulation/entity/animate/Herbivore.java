@@ -3,7 +3,7 @@ package com.projects.simulation.entity.animate;
 import com.projects.simulation.entity.EntityType;
 import com.projects.simulation.environment.Cell;
 import com.projects.simulation.environment.WorldMap;
-import com.projects.simulation.io.ConsoleManager;
+import com.projects.simulation.io.ConsoleWriter;
 import com.projects.simulation.path.PathToCell;
 import com.projects.simulation.utils.GameUtils;
 
@@ -24,7 +24,7 @@ public class Herbivore extends Creature {
         } else if (canMakeStep(worldMap)) {
             makeRandomMove(pathToCell, worldMap);
         } else {
-            ConsoleManager.printMessage("Herbivore " + this.cell +
+            ConsoleWriter.printMessage("Herbivore " + this.cell +
                     "can't make a move because it is barricaded. The move is skipped.");
         }
     }
