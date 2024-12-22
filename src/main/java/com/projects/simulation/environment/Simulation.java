@@ -110,9 +110,13 @@ public class Simulation {
         this.isRunningSimulation = true;
         while (isSimulationActive(queueInput)) {
             try {
+                if (needHerbivoreRegeneration()) {
+                    generateHerbivores();
+                }
+
                 nextTurn();
                 updateUI();
-                Thread.sleep(1500);
+                Thread.sleep(1000);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
@@ -125,9 +129,9 @@ public class Simulation {
         while (isSimulationActive(queueInput)) {
             try {
                 if (canContinueSimulation()) {
-                    Thread.sleep(1500);
                     nextTurn();
                     updateUI();
+                    Thread.sleep(1000);
                 } else {
                     ConsoleWriter.printMessage("The simulation can no longer continue on this map");
                     break;
@@ -148,10 +152,19 @@ public class Simulation {
         }
     }
 
+    private void generateHerbivores() {
+        HerbivoreSpawnAction spawnAction = new HerbivoreSpawnAction();
+        spawnAction.perform(this.worldMap);
+    }
+
     private void endGame() {
         ConsoleWriter.printGoodByeWords();
         this.isRunningSimulation = false;
         this.isRunningGame = false;
+    }
+
+    private boolean needHerbivoreRegeneration() {
+        return worldMap.getNumberOfEntity(EntityType.HERBIVORE) == 0;
     }
 
     private boolean isSimulationActive(BlockingQueue<Integer> queue) {
