@@ -13,7 +13,6 @@ public class WorldMapRender {
     public static final String GROUND_EMOJI = "\u2B1B";
 
     public void renderMap(WorldMap worldMap) {
-        //System.out.println();
         System.out.println("================================");
         for (int i = worldMap.getHeight(); i > 0; i--) {
             for (int j = 1; j <= worldMap.getWidth() ; j++) {
